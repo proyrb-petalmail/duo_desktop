@@ -21,7 +21,7 @@ namespace desktop
          * @param Range range error.
          * @param Create create error.
          * @version 1.0
-         * @date 2024/9/18
+         * @date 2024/9/19
          * @author ProYRB
          */
         typedef enum
@@ -45,7 +45,7 @@ namespace desktop
          * @brief generate a error with type.
          * @param type which type of error.
          * @version 1.0
-         * @date 2024/9/18
+         * @date 2024/9/19
          * @author ProYRB
          */
         error(const error_enum type);
@@ -56,7 +56,7 @@ namespace desktop
          * @brief get type of error.
          * @return return the type of error.
          * @version 1.0
-         * @date 2024/9/18
+         * @date 2024/9/19
          * @author ProYRB
          */
         const error_enum get_type();

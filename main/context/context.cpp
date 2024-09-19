@@ -17,7 +17,7 @@ namespace desktop
 
     context::context()
     {
-        Debug_Log("the unique of context generate");
+        Debug_Log("the unique of context generation");
         try
         {
             /* get directory of program */
@@ -42,7 +42,7 @@ namespace desktop
                 Debug_Error("failed to copy string");
                 throw error(error::error_enum::Copy);
             }
-            Debug_Log("program_directory:" << file_system_directory);
+            Debug_Log("file_system_directory:" << file_system_directory);
 
             atexit(record); /* register function at exit */
         }
@@ -62,7 +62,7 @@ namespace desktop
             Debug_Log("the unique of context exists one");
             return context::unique;
         }
-        return new context();
+        return (context::unique = new context());
     }
 
     const string &context::get_program_directory() { return this->program_directory; }

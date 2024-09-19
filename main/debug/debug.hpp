@@ -7,7 +7,7 @@
  * @brief output debug log.
  * @param ... what you want to output.
  * @version 1.0
- * @date 2024/9/18
+ * @date 2024/9/19
  * @author ProYRB
  */
 #define Debug_Log(...)                                                                             \
@@ -25,7 +25,7 @@
  * @brief output debug notice.
  * @param ... what you want to output.
  * @version 1.0
- * @date 2024/9/18
+ * @date 2024/9/19
  * @author ProYRB
  */
 #define Debug_Notice(...)                                                                          \
@@ -43,7 +43,7 @@
  * @brief output debug warn.
  * @param ... what you want to output.
  * @version 1.0
- * @date 2024/9/18
+ * @date 2024/9/19
  * @author ProYRB
  */
 #define Debug_Warn(...)                                                                            \
@@ -61,7 +61,7 @@
  * @brief output debug error.
  * @param ... what you want to output.
  * @version 1.0
- * @date 2024/9/18
+ * @date 2024/9/19
  * @author ProYRB
  */
 #define Debug_Error(...)                                                                           \

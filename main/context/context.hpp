@@ -26,7 +26,7 @@ namespace desktop
          * @brief get the unique context.
          * @return return the unique context pointer.
          * @version 1.0
-         * @date 2024/9/18
+         * @date 2024/9/19
          * @author ProYRB
          */
         static context *get_unique();
@@ -35,7 +35,7 @@ namespace desktop
          * @brief get the directory of program.
          * @return return the directory of program.
          * @version 1.0
-         * @date 2024/9/18
+         * @date 2024/9/19
          * @author ProYRB
          */
         const std::string &get_program_directory();
@@ -44,7 +44,7 @@ namespace desktop
          * @brief load the json file of pipe.
          * @param pipe_json the json file of pipe.
          * @version 1.0
-         * @date 2024/9/18
+         * @date 2024/9/19
          * @author ProYRB
          */
         void load_pipe_json(const std::string &pipe_json_name);
@@ -53,7 +53,7 @@ namespace desktop
          * @brief load the json file of gui.
          * @param gui_json the json file of gui.
          * @version 1.0
-         * @date 2024/9/18
+         * @date 2024/9/19
          * @author ProYRB
          */
         void load_gui_json(const std::string &gui_json_name);
@@ -63,7 +63,7 @@ namespace desktop
          * @param label the label of value.
          * @param value the value to replace.
          * @version 1.0
-         * @date 2024/9/18
+         * @date 2024/9/19
          * @author ProYRB
          */
         void replace_pipe_value(const std::string &label, const std::string &value);
@@ -73,7 +73,7 @@ namespace desktop
          * @param label the label of value.
          * @param value the value to replace.
          * @version 1.0
-         * @date 2024/9/18
+         * @date 2024/9/19
          * @author ProYRB
          */
         void replace_gui_value(const std::string &label, const std::string &value);
@@ -81,7 +81,7 @@ namespace desktop
         /**
          * @brief record the value of context.
          * @version 1.0
-         * @date 2024/9/18
+         * @date 2024/9/19
          * @author ProYRB
          */
         static void record();

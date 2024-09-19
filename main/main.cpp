@@ -4,6 +4,7 @@
 #include "context.hpp"
 #include "debug.hpp"
 #include "error.hpp"
+#include "gui.hpp"
 
 /* using namespace */
 using namespace std;
@@ -64,8 +65,9 @@ int main(const int argument_count, char **const argument_value)
     }
 
     /* test */
-    context::get_unique()->replace_pipe_value("pipe", "gogogo");
-    context::get_unique()->replace_gui_value("gui", "hello");
+    gui::get_unique()->initialize(argument_parser.get<string>(Argument_Fbdev),
+                                  argument_parser.get<string>(Argument_Evdev));
+    gui::get_unique()->execute();
 
     return 0;
 }
