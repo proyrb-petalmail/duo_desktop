@@ -20,6 +20,7 @@ include_directories(
 	./main/context
 	./main/debug
 	./main/error
+	./main/font
 	./main/gui
 	
 	./module

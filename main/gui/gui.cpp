@@ -8,8 +8,9 @@
 using namespace std;
 using namespace configor;
 
-#define App_Size   100
-#define App_Radius App_Size * (1 - 0.618)
+#define LV_OBJ_FLAG_ALL 0b11111111111111111111
+#define App_Size        100
+#define App_Radius      App_Size * 0.618 * 0.618
 
 namespace desktop
 {
@@ -107,12 +108,13 @@ namespace desktop
 
         /* deploy background */
         this->screen = lv_screen_active();
+        lv_obj_remove_flag(this->screen, (lv_obj_flag_t)LV_OBJ_FLAG_ALL);
         this->background = lv_obj_create(this->screen);
         lv_obj_remove_style_all(this->background);
         lv_obj_set_size(this->background, this->display->hor_res, this->display->ver_res);
         lv_obj_set_style_bg_image_src(this->background, "assets/background.png",
                                       LV_PART_MAIN | LV_STATE_DEFAULT);
-        lv_obj_remove_flag(this->background, LV_OBJ_FLAG_SCROLLABLE);
+        lv_obj_remove_flag(this->background, (lv_obj_flag_t)LV_OBJ_FLAG_ALL);
         lv_obj_update_layout(this->screen);
         Debug_Log("deploy background");
 
@@ -124,8 +126,8 @@ namespace desktop
         for (auto &element : list)
         {
             Debug_Log(json::wrap(element));
-            get_coord(temporary_coord, identity);
             this->app[identity] = lv_button_create(this->background);
+            get_coord(temporary_coord, identity);
             lv_obj_set_size(this->app[identity], App_Size, App_Size);
             lv_obj_align(this->app[identity], LV_ALIGN_CENTER, temporary_coord.x,
                          temporary_coord.y);
@@ -133,11 +135,28 @@ namespace desktop
                                       LV_PART_MAIN | LV_STATE_DEFAULT);
             lv_obj_set_style_radius(this->app[identity], App_Radius,
                                     LV_PART_MAIN | LV_STATE_DEFAULT);
+            lv_obj_set_style_pad_all(this->app[identity], 0, LV_PART_MAIN | LV_STATE_DEFAULT);
+            lv_obj_set_style_margin_all(this->app[identity], 30, LV_PART_MAIN | LV_STATE_DEFAULT);
+            lv_obj_remove_flag(this->app[identity], (lv_obj_flag_t)LV_OBJ_FLAG_ALL);
+            lv_obj_add_flag(this->app[identity],
+                            (lv_obj_flag_t)(LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_OVERFLOW_VISIBLE));
             lv_obj_add_event_cb(this->app[identity], short_click_event_callback,
                                 LV_EVENT_SHORT_CLICKED, &element);
             lv_obj_update_layout(this->screen);
-            Debug_Log("deploy " << element["name"].get<string>());
+
+            lv_obj_t *const label = lv_label_create(this->background);
+            lv_obj_align(label, LV_ALIGN_CENTER, temporary_coord.x,
+                         temporary_coord.y + (App_Size / 2) + 20);
+            lv_label_set_text(label, element["name"].get<string>().data());
+            lv_obj_set_style_text_color(label, lv_color_hex(0x000000),
+                                        LV_PART_MAIN | LV_STATE_DEFAULT);
+            lv_obj_set_style_text_font(label, &lv_font_custom_24, LV_PART_MAIN | LV_STATE_DEFAULT);
+            lv_obj_set_style_text_letter_space(label, 1, LV_PART_MAIN | LV_STATE_DEFAULT);
+            lv_obj_remove_flag(label, (lv_obj_flag_t)LV_OBJ_FLAG_ALL);
+            lv_obj_update_layout(this->screen);
+
             ++identity;
+            Debug_Log("deploy " << element["name"].get<string>());
         }
 
         Debug_Notice("initialize gui successfully");

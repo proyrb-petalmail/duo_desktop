@@ -38,7 +38,7 @@ int main(const int argument_count, char **const argument_value)
     {
         string command_string("find /dev -wholename " +
                               argument_parser.get<string>(Argument_Fbdev) +
-                              " > null");                   /* generate command */
+                              " > .cmdlog");                /* generate command */
         int command_result = system(command_string.data()); /* execute command */
         if (0 != command_result)
         {
@@ -50,7 +50,7 @@ int main(const int argument_count, char **const argument_value)
         command_string.clear();
         command_string.append("find /dev -wholename " +
                               argument_parser.get<string>(Argument_Evdev) +
-                              " > null");               /* generate command */
+                              " > .cmdlog");            /* generate command */
         command_result = system(command_string.data()); /* execute command */
         if (0 != command_result)
         {
