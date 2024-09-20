@@ -133,6 +133,8 @@ namespace desktop
                          temporary_coord.y);
             lv_obj_set_style_bg_color(this->app[identity], lv_color_hex(0xFFFFFF),
                                       LV_PART_MAIN | LV_STATE_DEFAULT);
+            lv_obj_set_style_bg_image_src(this->app[identity], element["icon"].get<string>().data(),
+                                          LV_PART_MAIN | LV_STATE_DEFAULT);
             lv_obj_set_style_radius(this->app[identity], App_Radius,
                                     LV_PART_MAIN | LV_STATE_DEFAULT);
             lv_obj_set_style_pad_all(this->app[identity], 0, LV_PART_MAIN | LV_STATE_DEFAULT);
