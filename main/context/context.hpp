@@ -59,6 +59,16 @@ namespace desktop
         void load_gui_json(const std::string &gui_json_name);
 
         /**
+         * @brief get the value of label of pipe json.
+         * @param label the label of value.
+         * @return return the json value.
+         * @version 1.0
+         * @date 2024/9/19
+         * @author ProYRB
+         */
+        configor::json::value &get_pipe_value(const std::string &label);
+
+        /**
          * @brief replace the value of pipe json.
          * @param label the label of value.
          * @param value the value to replace.
@@ -67,6 +77,16 @@ namespace desktop
          * @author ProYRB
          */
         void replace_pipe_value(const std::string &label, const std::string &value);
+
+        /**
+         * @brief get the value of label of gui json.
+         * @param label the label of value.
+         * @return return the json value.
+         * @version 1.0
+         * @date 2024/9/19
+         * @author ProYRB
+         */
+        configor::json::value &get_gui_value(const std::string &label);
 
         /**
          * @brief replace the value of gui json.

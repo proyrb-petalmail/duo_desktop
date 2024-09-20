@@ -1,3 +1,4 @@
 {
-    "pipe": "gogogo"
+    "path": "/root/desktop/app/face/sample_vi_fd",
+    "argument": "/root/desktop/app/face/scrfd_768_432_int8_1x.cvimodel"
 }

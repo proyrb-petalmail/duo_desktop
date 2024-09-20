@@ -9,6 +9,7 @@
 /* using namespace */
 using namespace std;
 using namespace cmdline;
+using namespace configor;
 using namespace desktop;
 
 int main(const int argument_count, char **const argument_value)
@@ -30,12 +31,15 @@ int main(const int argument_count, char **const argument_value)
     Debug_Log("--" Argument_Pipe "=" << argument_parser.get<string>(Argument_Pipe));
     Debug_Log("--" Argument_Gui "=" << argument_parser.get<string>(Argument_Gui));
 
+    context *const context = context::get_unique();
+
     /* confirm that arguments are correct */
     try
     {
         string command_string("find /dev -wholename " +
-                              argument_parser.get<string>(Argument_Fbdev)); /* generate command */
-        int command_result = system(command_string.data());                 /* execute command */
+                              argument_parser.get<string>(Argument_Fbdev) +
+                              " > null");                   /* generate command */
+        int command_result = system(command_string.data()); /* execute command */
         if (0 != command_result)
         {
             Debug_Error("failed to find fbdev");
@@ -45,8 +49,9 @@ int main(const int argument_count, char **const argument_value)
 
         command_string.clear();
         command_string.append("find /dev -wholename " +
-                              argument_parser.get<string>(Argument_Evdev)); /* generate command */
-        command_result = system(command_string.data());                     /* execute command */
+                              argument_parser.get<string>(Argument_Evdev) +
+                              " > null");               /* generate command */
+        command_result = system(command_string.data()); /* execute command */
         if (0 != command_result)
         {
             Debug_Error("failed to find evdev");
@@ -54,20 +59,20 @@ int main(const int argument_count, char **const argument_value)
         }
         Debug_Notice("find evdev successfully");
 
-        context::get_unique()->load_pipe_json(
-            argument_parser.get<string>(Argument_Pipe)); /* load pipe json file */
-        context::get_unique()->load_gui_json(
-            argument_parser.get<string>(Argument_Gui)); /* load gui json file */
+        context->load_pipe_json(
+            argument_parser.get<string>(Argument_Pipe));                   /* load pipe json file */
+        context->load_gui_json(argument_parser.get<string>(Argument_Gui)); /* load gui json file */
     }
     catch (error &error)
     {
         exit(error.get_type()); /* exit with error code */
     }
 
-    /* test */
-    gui::get_unique()->initialize(argument_parser.get<string>(Argument_Fbdev),
-                                  argument_parser.get<string>(Argument_Evdev));
-    gui::get_unique()->execute();
+    gui *const gui = gui::get_unique();
+
+    gui->initialize(argument_parser.get<string>(Argument_Fbdev),
+                    argument_parser.get<string>(Argument_Evdev));
+    gui->execute();
 
     return 0;
 }

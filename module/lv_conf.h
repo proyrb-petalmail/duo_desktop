@@ -52,7 +52,7 @@
 
 #if LV_USE_STDLIB_MALLOC == LV_STDLIB_BUILTIN
     /*Size of the memory available for `lv_malloc()` in bytes (>= 2kB)*/
-    #define LV_MEM_SIZE (64 * 1024 * 1024U) /*[bytes]*/
+    #define LV_MEM_SIZE (256 * 1024 * 1024U) /*[bytes]*/
 
     /*Size of the memory expand for `lv_malloc()` in bytes*/
     #define LV_MEM_POOL_EXPAND_SIZE 0
@@ -117,12 +117,12 @@
  * and can't be drawn in chunks. */
 
 /*The target buffer size for simple layer chunks.*/
-#define LV_DRAW_LAYER_SIMPLE_BUF_SIZE (64 * 1024U) /*[bytes]*/
+#define LV_DRAW_LAYER_SIMPLE_BUF_SIZE (1024 * 1024U) /*[bytes]*/
 
 /* The stack size of the drawing thread.
  * NOTE: If FreeType or ThorVG is enabled, it is recommended to set it to 32KB or more.
  */
-#define LV_DRAW_THREAD_STACK_SIZE (32 * 1024) /*[bytes]*/
+#define LV_DRAW_THREAD_STACK_SIZE (64 * 1024) /*[bytes]*/
 
 #define LV_USE_DRAW_SW 1
 #if LV_USE_DRAW_SW == 1
@@ -150,10 +150,10 @@
     #define LV_DRAW_SW_DRAW_UNIT_CNT 1
 
     /* Use Arm-2D to accelerate the sw render */
-    #define LV_USE_DRAW_ARM2D_SYNC 0
+    #define LV_USE_DRAW_ARM2D_SYNC 1
 
     /* Enable native helium assembly to be compiled */
-    #define LV_USE_NATIVE_HELIUM_ASM 0
+    #define LV_USE_NATIVE_HELIUM_ASM 1
 
     /* 0: use a simple renderer capable of drawing only simple rectangles with gradient, images, texts, and straight lines only
      * 1: use a complex renderer capable of drawing rounded corners, shadow, skew lines, and arcs too */
@@ -163,13 +163,13 @@
         /*Allow buffering some shadow calculation.
         *LV_DRAW_SW_SHADOW_CACHE_SIZE is the max. shadow size to buffer, where shadow size is `shadow_width + radius`
         *Caching has LV_DRAW_SW_SHADOW_CACHE_SIZE^2 RAM cost*/
-        #define LV_DRAW_SW_SHADOW_CACHE_SIZE 64
+        #define LV_DRAW_SW_SHADOW_CACHE_SIZE 32
 
         /* Set number of maximally cached circle data.
         * The circumference of 1/4 circle are saved for anti-aliasing
         * radius * 4 bytes are used per circle (the most often used radiuses are saved)
         * 0: to disable caching */
-        #define LV_DRAW_SW_CIRCLE_CACHE_SIZE 64
+        #define LV_DRAW_SW_CIRCLE_CACHE_SIZE 32
     #endif
 
     #define  LV_USE_DRAW_SW_ASM LV_DRAW_SW_ASM_NONE
@@ -352,7 +352,7 @@
 
 /*Default number of image header cache entries. The cache is used to store the headers of images
  *The main logic is like `LV_CACHE_DEF_SIZE` but for image headers.*/
-#define LV_IMAGE_HEADER_CACHE_DEF_CNT 16
+#define LV_IMAGE_HEADER_CACHE_DEF_CNT 32
 
 /*Number of stops allowed per gradient. Increase this to allow more stops.
  *This adds (sizeof(lv_color_t) + 1) bytes per additional stop*/
@@ -380,7 +380,7 @@
 #define LV_USE_OBJ_ID_BUILTIN 1
 
 /*Use obj property set/get API*/
-#define LV_USE_OBJ_PROPERTY 0
+#define LV_USE_OBJ_PROPERTY 1
 
 /*Enable property name support*/
 #define LV_USE_OBJ_PROPERTY_NAME 1
@@ -458,7 +458,7 @@
 #define LV_USE_MATRIX 0
 
 /*Include `lvgl_private.h` in `lvgl.h` to access internal data and functions by default*/
-#define LV_USE_PRIVATE_API 0
+#define LV_USE_PRIVATE_API 1
 
 /*==================
  *   FONT USAGE
@@ -501,7 +501,7 @@
 /*Optionally declare custom fonts here.
  *You can use these fonts as default font too and they will be available globally.
  *E.g. #define LV_FONT_CUSTOM_DECLARE LV_FONT_DECLARE(my_font_1) LV_FONT_DECLARE(my_font_2)*/
-#define LV_FONT_CUSTOM_DECLARE LV_FONT_DECLARE(lv_font_custom_20) LV_FONT_DECLARE(lv_font_custom_30) LV_FONT_DECLARE(lv_font_custom_40)
+#define LV_FONT_CUSTOM_DECLARE //LV_FONT_DECLARE(lv_font_custom_20) LV_FONT_DECLARE(lv_font_custom_30) LV_FONT_DECLARE(lv_font_custom_40)
 
 /*Always set a default font*/
 #define LV_FONT_DEFAULT &lv_font_montserrat_20
@@ -711,7 +711,7 @@
 /*API for open, read, etc*/
 #define LV_USE_FS_POSIX 1
 #if LV_USE_FS_POSIX
-    extern const char *file_system_directory;            /*The directory of file system*/
+    extern const char *file_system_directory;      /*The directory of file system*/
     #define LV_FS_POSIX_LETTER 'L'                 /*Set an upper cased letter on which the drive will accessible (e.g. 'A')*/
     #define LV_FS_POSIX_PATH file_system_directory /*Set the working directory. File/directory paths will be appended to it.*/
     #define LV_FS_POSIX_CACHE_SIZE 64              /*>0 to cache this number of bytes in lv_fs_read()*/
@@ -919,7 +919,7 @@
 #if LV_USE_IME_PINYIN
     /*1: Use default thesaurus*/
     /*If you do not use the default thesaurus, be sure to use `lv_ime_pinyin` after setting the thesaurus*/
-    #define LV_IME_PINYIN_USE_DEFAULT_DICT 1
+    #define LV_IME_PINYIN_USE_DEFAULT_DICT 0
     /*Set the maximum number of candidate panels that can be displayed*/
     /*This needs to be adjusted according to the size of the screen*/
     #define LV_IME_PINYIN_CAND_TEXT_NUM 8

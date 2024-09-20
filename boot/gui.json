@@ -1,3 +1,30 @@
 {
-    "gui": "hello"
+    "column": 3,
+    "list": [
+        {
+            "name": "face",
+            "path": "/root/desktop/app/face/sample_vi_fd",
+            "argument": "/root/desktop/app/face/scrfd_768_432_int8_1x.cvimodel",
+            "icon": "icon.png"
+        },
+        {
+            "name": "face",
+            "path": "/root/desktop/app/face/sample_vi_fd",
+            "argument": "/root/desktop/app/face/scrfd_768_432_int8_1x.cvimodel",
+            "icon": "icon.png"
+        },
+        {
+            "name": "face",
+            "path": "/root/desktop/app/face/sample_vi_fd",
+            "argument": "/root/desktop/app/face/scrfd_768_432_int8_1x.cvimodel",
+            "icon": "icon.png"
+        },
+        {
+            "name": "face",
+            "path": "/root/desktop/app/face/sample_vi_fd",
+            "argument": "/root/desktop/app/face/scrfd_768_432_int8_1x.cvimodel",
+            "icon": "icon.png"
+        }
+    ],
+    "row": 5
 }

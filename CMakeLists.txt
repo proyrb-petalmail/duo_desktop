@@ -69,7 +69,7 @@ include_directories(
 	./module/lvgl/src/layouts
 	./module/lvgl/src/layouts/flex
 	./module/lvgl/src/layouts/grid
-	# ./module/lvgl/src/libs
+	./module/lvgl/src/libs
 	# ./module/lvgl/src/libs/barcode
 	# ./module/lvgl/src/libs/bin_decoder
 	# ./module/lvgl/src/libs/bmp
@@ -79,7 +79,7 @@ include_directories(
 	# ./module/lvgl/src/libs/gif
 	# ./module/lvgl/src/libs/libjpeg_turbo
 	# ./module/lvgl/src/libs/libpng
-	# ./module/lvgl/src/libs/lodepng
+	./module/lvgl/src/libs/lodepng
 	# ./module/lvgl/src/libs/lz4
 	# ./module/lvgl/src/libs/qrcode
 	# ./module/lvgl/src/libs/rle

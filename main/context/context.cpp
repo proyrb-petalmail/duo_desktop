@@ -97,6 +97,11 @@ namespace desktop
         Debug_Notice("load gui json file successfully");
     }
 
+    configor::json::value &context::get_pipe_value(const std::string &label)
+    {
+        return this->pipe_json[label.data()];
+    }
+
     void context::replace_pipe_value(const std::string &label, const std::string &value)
     {
         if (!this->pipe_json[label.data()].is_string())
@@ -106,6 +111,11 @@ namespace desktop
         }
         this->pipe_json[label.data()] = value;
         Debug_Notice("replace the value of pipe successfully");
+    }
+
+    configor::json::value &context::get_gui_value(const std::string &label)
+    {
+        return this->gui_json[label.data()];
     }
 
     void context::replace_gui_value(const std::string &label, const std::string &value)
