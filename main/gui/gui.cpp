@@ -9,24 +9,37 @@ using namespace std;
 using namespace configor;
 
 #define LV_OBJ_FLAG_ALL 0b11111111111111111111
+#define LV_STATE_OPEN   LV_STATE_USER_1
 #define App_Size        100
 #define App_Radius      App_Size * 0.618 * 0.618
 
 namespace desktop
 {
-    /**
-     * @brief the coord of object of lvgl.
-     * @param x the x coord.
-     * @param y the y coord.
-     * @version 1.0
-     * @date 2024/9/19
-     * @author ProYRB
-     */
-    struct coord
+    static void timer_callback(lv_timer_t *timer)
     {
-        int x;
-        int y;
-    };
+        lv_obj_send_event((lv_obj_t *)lv_timer_get_user_data(timer), LV_EVENT_SHORT_CLICKED,
+                          nullptr);
+    }
+
+    gui::app::app() {}
+
+    void gui::app::set_object(lv_obj_t *const object) { this->object = object; }
+
+    lv_obj_t *gui::app::get_object() { return this->object; }
+
+    void gui::app::set_coord(const gui::coord &coord) { this->coord = coord; }
+
+    gui::coord &gui::app::get_coord() { return this->coord; }
+
+    void gui::app::set_icon(const std::string &icon) { this->icon = icon; }
+
+    std::string &gui::app::get_icon() { return this->icon; }
+
+    void gui::app::set_data(configor::json::value *const data) { this->data = data; }
+
+    configor::json::value *gui::app::get_data() { return this->data; }
+
+    gui::app::~app() {}
 
     gui *gui::unique = nullptr;
 
@@ -52,16 +65,84 @@ namespace desktop
         target.y = (row_value - row_middle) * row_pad;
     }
 
+    void gui::animation_complete_callback(lv_anim_t *const animation)
+    {
+        Debug_Log("animation complete");
+        class app *data = ((class app *)lv_anim_get_user_data(animation));
+        context *const context = context::get_unique();
+        json::value *const json_data = data->get_data();
+        context->replace_pipe_value("path", (*json_data)["path"].get<string>());
+        context->replace_pipe_value("argument", (*json_data)["argument"].get<string>());
+        Debug_Warn("exit");
+        exit(0);
+    }
+
     void gui::short_click_event_callback(lv_event_t *const event)
     {
-        Debug_Notice("short click event");
         lv_obj_t *const event_trigger = (lv_obj_t *)lv_event_get_target(event);
-        json::value *const data = ((json::value *)lv_event_get_user_data(event));
-        context *const context = context::get_unique();
-        Debug_Log("data:" << (*data)["name"].get<string>());
-        context->replace_pipe_value("path", (*data)["path"].get<string>());
-        context->replace_pipe_value("argument", (*data)["argument"].get<string>());
-        exit(0);
+        class app *data = ((class app *)lv_event_get_user_data(event));
+        lv_obj_move_foreground(event_trigger);
+
+        if (lv_obj_has_state(event_trigger, LV_STATE_OPEN))
+        {
+            lv_obj_remove_state(event_trigger, LV_STATE_OPEN);
+
+            lv_anim_t animation;
+            lv_anim_init(&animation);
+            lv_anim_set_var(&animation, event_trigger);
+            lv_anim_set_duration(&animation, 500);
+
+            lv_anim_set_path_cb(&animation, lv_anim_path_ease_out);
+            lv_anim_set_exec_cb(&animation, (lv_anim_exec_xcb_t)lv_obj_set_x);
+            lv_anim_set_values(&animation, lv_obj_get_x_aligned(event_trigger),
+                               data->get_coord().x);
+            lv_anim_start(&animation);
+
+            lv_anim_set_exec_cb(&animation, (lv_anim_exec_xcb_t)lv_obj_set_y);
+            lv_anim_set_values(&animation, lv_obj_get_y_aligned(event_trigger),
+                               data->get_coord().y);
+            lv_anim_start(&animation);
+
+            lv_anim_set_exec_cb(&animation, (lv_anim_exec_xcb_t)lv_obj_set_width);
+            lv_anim_set_values(&animation, lv_obj_get_width(event_trigger), App_Size);
+            lv_anim_start(&animation);
+
+            lv_anim_set_exec_cb(&animation, (lv_anim_exec_xcb_t)lv_obj_set_height);
+            lv_anim_set_values(&animation, lv_obj_get_height(event_trigger), App_Size);
+            lv_anim_start(&animation);
+        }
+        else
+        {
+            lv_obj_add_state(event_trigger, LV_STATE_OPEN);
+
+            lv_anim_t animation;
+            lv_anim_init(&animation);
+            lv_anim_set_var(&animation, event_trigger);
+            lv_anim_set_duration(&animation, 300);
+            lv_anim_set_user_data(&animation, data);
+
+            lv_anim_set_path_cb(&animation, lv_anim_path_ease_out);
+            lv_anim_set_exec_cb(&animation, (lv_anim_exec_xcb_t)lv_obj_set_x);
+            lv_anim_set_values(&animation, lv_obj_get_x_aligned(event_trigger), 0);
+            lv_anim_start(&animation);
+
+            lv_anim_set_exec_cb(&animation, (lv_anim_exec_xcb_t)lv_obj_set_y);
+            lv_anim_set_values(&animation, lv_obj_get_y_aligned(event_trigger), 0);
+            lv_anim_start(&animation);
+
+            lv_anim_set_exec_cb(&animation, (lv_anim_exec_xcb_t)lv_obj_set_width);
+            lv_anim_set_values(&animation, lv_obj_get_width(event_trigger),
+                               lv_obj_get_width(lv_obj_get_parent(event_trigger)));
+            lv_anim_start(&animation);
+
+            lv_anim_set_exec_cb(&animation, (lv_anim_exec_xcb_t)lv_obj_set_height);
+            lv_anim_set_values(&animation, lv_obj_get_height(event_trigger),
+                               lv_obj_get_height(lv_obj_get_parent(event_trigger)));
+            lv_anim_set_completed_cb(&animation, animation_complete_callback);
+            lv_anim_start(&animation);
+        }
+
+        Debug_Log("click " << (*(data->get_data()))["name"].get<string>());
     }
 
     gui *gui::get_unique()
@@ -120,30 +201,46 @@ namespace desktop
 
         /* deploy app */
         json::value &list = this->context_pointer->get_gui_value("list");
-        this->app = new lv_obj_t *[list.size()];
-        coord temporary_coord = {0, 0};
+        this->app = new class app[list.size()];
         char identity = 0;
         for (auto &element : list)
         {
             Debug_Log(json::wrap(element));
-            this->app[identity] = lv_button_create(this->background);
+            lv_obj_t *tmp_app = nullptr;
+            this->app[identity].set_object(tmp_app = lv_button_create(this->background));
+            coord temporary_coord = {0, 0};
             get_coord(temporary_coord, identity);
-            lv_obj_set_size(this->app[identity], App_Size, App_Size);
-            lv_obj_align(this->app[identity], LV_ALIGN_CENTER, temporary_coord.x,
-                         temporary_coord.y);
-            lv_obj_set_style_bg_color(this->app[identity], lv_color_hex(0xFFFFFF),
+            this->app[identity].set_coord(temporary_coord);
+            this->app[identity].set_icon(element["icon"].get<string>());
+            this->app[identity].set_data(&element);
+
+            if (0 == context::get_unique()->get_pipe_value("path").get<string>().compare(
+                         element["path"].get<string>()))
+            {
+                lv_obj_set_size(tmp_app, this->display->hor_res, this->display->ver_res);
+                lv_obj_align(tmp_app, LV_ALIGN_CENTER, 0, 0);
+                lv_obj_add_state(tmp_app, LV_STATE_OPEN);
+
+                lv_timer_t *const timer = lv_timer_create(timer_callback, 0, tmp_app);
+                lv_timer_set_repeat_count(timer, 1);
+                lv_timer_ready(timer);
+            }
+            else
+            {
+                lv_obj_set_size(tmp_app, App_Size, App_Size);
+                lv_obj_align(tmp_app, LV_ALIGN_CENTER, temporary_coord.x, temporary_coord.y);
+            }
+            lv_obj_set_style_bg_color(tmp_app, lv_color_hex(0xFFFFFF),
                                       LV_PART_MAIN | LV_STATE_DEFAULT);
-            lv_obj_set_style_bg_image_src(this->app[identity], element["icon"].get<string>().data(),
+            lv_obj_set_style_bg_image_src(tmp_app, this->app[identity].get_icon().data(),
                                           LV_PART_MAIN | LV_STATE_DEFAULT);
-            lv_obj_set_style_radius(this->app[identity], App_Radius,
-                                    LV_PART_MAIN | LV_STATE_DEFAULT);
-            lv_obj_set_style_pad_all(this->app[identity], 0, LV_PART_MAIN | LV_STATE_DEFAULT);
-            lv_obj_set_style_margin_all(this->app[identity], 30, LV_PART_MAIN | LV_STATE_DEFAULT);
-            lv_obj_remove_flag(this->app[identity], (lv_obj_flag_t)LV_OBJ_FLAG_ALL);
-            lv_obj_add_flag(this->app[identity],
+            lv_obj_set_style_radius(tmp_app, App_Radius, LV_PART_MAIN | LV_STATE_DEFAULT);
+            lv_obj_set_style_pad_all(tmp_app, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
+            lv_obj_remove_flag(tmp_app, (lv_obj_flag_t)LV_OBJ_FLAG_ALL);
+            lv_obj_add_flag(tmp_app,
                             (lv_obj_flag_t)(LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_OVERFLOW_VISIBLE));
-            lv_obj_add_event_cb(this->app[identity], short_click_event_callback,
-                                LV_EVENT_SHORT_CLICKED, &element);
+            lv_obj_add_event_cb(tmp_app, short_click_event_callback, LV_EVENT_SHORT_CLICKED,
+                                &(this->app[identity]));
             lv_obj_update_layout(this->screen);
 
             lv_obj_t *const label = lv_label_create(this->background);

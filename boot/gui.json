@@ -12,12 +12,6 @@
             "path": "/root/desktop/app/wlan/wlan",
             "argument": "",
             "icon": "app/wlan/assets/icon.png"
-        },
-        {
-            "name": "其他",
-            "path": "/root/desktop/app/face/sample_vi_fd",
-            "argument": "/root/desktop/app/face/scrfd_768_432_int8_1x.cvimodel",
-            "icon": "icon.png"
         }
     ],
     "row": 5
